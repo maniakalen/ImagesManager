@@ -1,6 +1,8 @@
 package geo.peter.images.controler;
 
 import javax.swing.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 
 /**
  * Hello world!
@@ -20,7 +22,15 @@ public class App
 
         JCustomFileChooser.addTo(panel, "Source");
         JCustomFileChooser.addTo(panel, "Destination");
+        JButton start = new JButton("Start");
+        panel.add(start);
 
+        start.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+
+            }
+        });
 
         this.frame.pack();
         this.frame.setVisible(true);
