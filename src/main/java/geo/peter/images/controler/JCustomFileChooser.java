@@ -36,10 +36,12 @@ public class JCustomFileChooser implements ActionListener
     {
         return this.panel;
     }
-    public static void addTo(JComponent element, String label)
+    public static JCustomFileChooser addTo(JComponent element, String label)
     {
         JFrame root = (JFrame)element.getRootPane().getParent();
-        element.add((new JCustomFileChooser(label, root)).getFileChooser());
+        JCustomFileChooser chooser = new JCustomFileChooser(label, root);
+        element.add(chooser.getFileChooser());
+        return chooser;
     }
 
     @Override
@@ -51,5 +53,10 @@ public class JCustomFileChooser implements ActionListener
             this.selection = fc.getSelectedFile();
             this.file.setText(this.selection.toString());
         }
+    }
+
+    public File getSelection()
+    {
+        return this.selection;
     }
 }
