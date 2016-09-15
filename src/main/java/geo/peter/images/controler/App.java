@@ -18,20 +18,9 @@ public class App
         panel.setLayout(new BoxLayout(panel, BoxLayout.PAGE_AXIS));
         this.frame.getContentPane().add(panel);
 
-        JPanel source = new JPanel();
-        JFileChooser chooser = new JFileChooser();
-        chooser.setFileSelectionMode(JFileChooser.DIRECTORIES_ONLY);
-        source.add(new JLabel("Source: "));
-        source.add(chooser);
+        JCustomFileChooser.addTo(panel, "Source");
+        JCustomFileChooser.addTo(panel, "Destination");
 
-        JPanel destination = new JPanel();
-        JFileChooser chooserdest = new JFileChooser();
-        chooserdest.setFileSelectionMode(JFileChooser.DIRECTORIES_ONLY);
-        destination.add(new JLabel("Destination: "));
-        destination.add(chooserdest);
-
-        panel.add(source);
-        panel.add(destination);
 
         this.frame.pack();
         this.frame.setVisible(true);
