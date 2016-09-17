@@ -1,8 +1,11 @@
 package geo.peter.images.controler;
 
 import javax.swing.*;
+import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.beans.PropertyChangeEvent;
+import java.beans.PropertyChangeListener;
 import java.io.File;
 import java.io.FileFilter;
 
@@ -10,7 +13,7 @@ import java.io.FileFilter;
  * Hello world!
  *
  */
-public class App implements ActionListener
+public class App
 {
     private JFrame frame;
     private JCustomFileChooser source;
@@ -26,10 +29,21 @@ public class App implements ActionListener
 
         this.source = JCustomFileChooser.addTo(panel, "Source");
         this.destination = JCustomFileChooser.addTo(panel, "Destination");
-        JButton start = new JButton("Start");
-        panel.add(start);
 
-        start.addActionListener(this);
+        JPanel actions = new JPanel();
+        actions.setLayout(new FlowLayout());
+        JButton move = new JButton("Move");
+        JButton copy = new JButton("Copy");
+        actions.add(move);
+        actions.add(copy);
+        panel.add(actions);
+
+        move.addActionListener(new FileTransferActionListener(this.frame, this.source, this.destination, new Move()));
+        copy.addActionListener(new FileTransferActionListener(this.frame, this.source, this.destination, new Copy()));
+
+        Dimension dim = Toolkit.getDefaultToolkit().getScreenSize();
+        this.frame.setLocation(dim.width/2-this.frame.getSize().width/2, dim.height/2-this.frame.getSize().height/2);
+
 
         this.frame.pack();
         this.frame.setVisible(true);
@@ -44,36 +58,5 @@ public class App implements ActionListener
                 new App();
             }
         });
-    }
-
-    @Override
-    public void actionPerformed(ActionEvent e) {
-        JDialog progressBar = new JDialog(this.frame);
-
-        File sourceFile = this.source.getSelection();
-        int count = sourceFile.listFiles(new FileFilter() {
-            @Override
-            public boolean accept(File pathname) {
-                if (pathname.isFile()) {
-                    String path = pathname.getAbsolutePath().toLowerCase();
-                    return path.endsWith(".jpeg") || path.endsWith(".jpg");
-                }
-                return false;
-            }
-        }).length;
-        if (count == 0) {
-            JOptionPane.showMessageDialog(frame,
-                    "No image files found",
-                    "Files not found",
-                    JOptionPane.WARNING_MESSAGE);
-        } else {
-            JPanel panel = new JPanel();
-            JProgressBar progress = new JProgressBar(0, count);
-
-            (new FileTransporter(this.source.getSelection(), this.destination.getSelection())).execute();
-
-            progressBar.pack();
-            progressBar.setVisible(true);
-        }
     }
 }
