@@ -13,22 +13,24 @@ class FileTransporter extends SwingWorker<Boolean, Integer>
     private File destination;
     private FileMoveAction action;
     private JLabel prg;
-
-    FileTransporter(File[] source, File destination, JLabel prg, FileMoveAction action)
+    private float count;
+    FileTransporter(File[] source, File destination, JLabel prg, FileMoveAction action, int count)
     {
         super();
         this.prg = prg;
         this.source = source;
         this.destination = destination;
         this.action = action;
+        this.count = (float)count;
     }
     @Override
     protected Boolean doInBackground() throws Exception {
         try {
             String dest = this.destination.toString();
             String destination;
-            int progress = 0;
-            setProgress(progress);
+            float progress = 0;
+            int prgs = 0;
+            setProgress(prgs);
             for (File file : this.source) {
                 destination = "";
                 if (file.isFile()) {
@@ -53,20 +55,27 @@ class FileTransporter extends SwingWorker<Boolean, Integer>
                     destination += File.separator + file.getName();
                     this.action.run(file.toPath(), Paths.get(destination));
                     progress += 1;
-                    setProgress(progress);
-                    publish(progress);
+                    prgs = (int)( (progress/this.count) * 100);
+                    setProgress(prgs);
+                    publish((int)progress);
                 }
             }
         } catch (Exception ex) {
             ex.printStackTrace(System.err);
+            return false;
         }
-        return null;
+        return true;
     }
 
     @Override
     protected void process(List<Integer> chunks) {
         for (int number : chunks) {
-            this.prg.setText(Integer.toString(number));
+            this.prg.setText(Integer.toString(number) + " / " + Integer.toString((int)this.count));
         }
+    }
+
+    @Override
+    protected void done() {
+        this.prg.setText(this.prg.getText() + " - Done!");
     }
 }

@@ -49,12 +49,12 @@ class FileTransferActionListener implements ActionListener
             } else {
                 JPanel panel = new JPanel();
                 panel.setLayout(new BoxLayout(panel, BoxLayout.PAGE_AXIS));
-                JProgressBar progress = new JProgressBar(0, count);
-                JLabel prg = new JLabel("0");
+                JProgressBar progress = new JProgressBar(0, 100);
+                JLabel prg = new JLabel("0 / " + Integer.toString(count));
                 panel.add(progress);
                 panel.add(prg);
                 progressBar.add(panel);
-                FileTransporter transporter = new FileTransporter(files, this.destination.getSelection(), prg, this.action);
+                FileTransporter transporter = new FileTransporter(files, this.destination.getSelection(), prg, this.action, count);
                 transporter.addPropertyChangeListener(new PropertyChangeListener() {
                     @Override
                     public void propertyChange(PropertyChangeEvent evt) {
